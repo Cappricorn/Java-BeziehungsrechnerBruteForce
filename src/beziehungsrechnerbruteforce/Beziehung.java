@@ -40,6 +40,42 @@ public class Beziehung implements Comparable<Beziehung> {
     public void ordne(String[] ursprungsname) {
     	this.namen = ursprungsname;
         zahlen.clear();
+        
+      //Doppel-N-Grossschreiber Beginn
+        for(int nameNum = 0;nameNum<namen.length;nameNum++) {
+        	int nIndexBegin = -1;
+        	int nIndexEnd = -1;
+        	for(int i=0;i<namen[nameNum].length();i++) {
+        		if(namen[nameNum].toLowerCase().charAt(i) == 'n') {
+        			if(nIndexBegin==-1) {
+        				nIndexBegin = i;
+        				nIndexEnd = i;
+        			} else {
+        				nIndexEnd = i;
+        			}
+        		} else if(nIndexBegin!=-1) {
+        			if(nIndexBegin!= nIndexEnd) {
+	        			for(int n=nIndexBegin;n<nIndexEnd+1;n++) {
+	        				char[] nameChars = namen[nameNum].toCharArray();
+	        				nameChars[n] = 'N';
+	        				namen[nameNum] = String.valueOf(nameChars);
+	        			}
+        			}
+	        		nIndexBegin = -1;
+	                nIndexEnd = -1;
+        		}
+        	}
+        	if(nIndexBegin!=-1 && nIndexBegin!= nIndexEnd) {
+	        	for(int n=nIndexBegin;n<nIndexEnd+1;n++) {
+					char[] nameChars = namen[nameNum].toCharArray();
+					nameChars[n] = 'N';
+					namen[nameNum] = String.valueOf(nameChars);
+				}
+				nIndexBegin = -1;
+	        	nIndexEnd = -1;
+        	}
+        }
+        //Doppel-N-Grossschreiber Ende
 
         Arrays.sort(namen);
         String gesamtname = namen[0] + namen[1];

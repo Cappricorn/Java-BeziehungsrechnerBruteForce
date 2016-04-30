@@ -36,6 +36,8 @@ public class Rechner {
 	private BufferedReader br;
 	private ArrayList<String> namen = new ArrayList<String>();
 	private ArrayList<Beziehung> beziehungen = new ArrayList<Beziehung>();
+	private boolean einzelNameBool = false;
+	private String einzelNameStr = "";
 	
 	public Rechner() {
 		einlesen("./files/namen.txt");
@@ -105,8 +107,19 @@ public class Rechner {
 	            			System.exit(0);
 	            		}
 	            	} else {
-	            		String[] temp = zeile.split("#");
-		            	for(String str:temp) {
+	            		String[] einzelTemp = zeile.split("##");//Einzelpruefung fuer Namen
+	            		int tempIndex;
+	            		if(einzelTemp.length==2) {
+	            			tempIndex = 1;
+	            			einzelNameBool = true;
+	            			einzelNameStr = einzelTemp[0].substring(1);
+	            		} else {
+	            			tempIndex = 0;
+	            			einzelNameBool = false;
+	            		}
+	            		
+	            		String[] temp = einzelTemp[tempIndex].split("#");
+	            		for(String str:temp) {
 		            		if(!str.equals(null) && !str.equals("")) {
 		            			String endname = "";
 		            			for(char ch:str.toCharArray()) {
@@ -145,9 +158,14 @@ public class Rechner {
 	 */
 	public void berechnung() {
 		for(int a=0;a<namen.size();a++) {
-			for(int b=0;b<a;b++) {
-				String[] paar = {namen.get(a),namen.get(b)};
+			if(einzelNameBool) {
+				String[] paar = {namen.get(a),einzelNameStr};
 				beziehungen.add(new Beziehung(paar));
+			} else {
+				for(int b=0;b<a;b++) {
+					String[] paar = {namen.get(a),namen.get(b)};
+					beziehungen.add(new Beziehung(paar));
+				}
 			}
 		}
 		Collections.sort(beziehungen);
